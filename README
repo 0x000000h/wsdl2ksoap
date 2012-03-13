@@ -8,7 +8,9 @@ You can build this project using NetBeans IDE http://netbeans.org/
 
 USAGE
 
-java -jar ./dist/WSDL2KSOAP.jar <wsdl uri> <output path> <package.name>
+java -jar ./dist/WSDL2KSOAP.jar <wsdl uri> <output path> <package.name> [<templates dir>]
+
+Note that the last parameter is optional.
 
 TESTING
 
