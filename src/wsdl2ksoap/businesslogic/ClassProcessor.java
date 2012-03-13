@@ -19,10 +19,17 @@ import wsdl2ksoap.datatypes.SoapClassProperty;
  */
 public class ClassProcessor
 {
+    
+    public static String ResourcesBase = "classpath:wsdl2ksoap/businesslogic/resources/";
+    
+    private static InputStream getResource(String name){
+        return FileHelper.loadResource(ResourcesBase + name);
+    }
+    
     static public void CreateServiceClass(String packagename) throws Exception
     {
             //retrieve class
-            InputStream file = ClassProcessor.class.getResourceAsStream("resources/ClassTemplate.txt");
+            InputStream file = getResource("ClassTemplate.txt");
 
 
             if (file != null) {
@@ -39,7 +46,7 @@ public class ClassProcessor
                 classText = classText.replaceAll("%%CLASSNAME%%", PropertyContainer.ServiceName + "Soap");
 
                 //load service imports
-                InputStream impFile = ClassProcessor.class.getResourceAsStream("resources/ServiceImportsTemplate.txt");
+                InputStream impFile = getResource("ServiceImportsTemplate.txt");
 
                 if (impFile != null) {
                     //replace imports place holder
@@ -50,10 +57,10 @@ public class ClassProcessor
                     throw new Exception("unable loads methods template");
                 }
 
+                classText = classText.replaceAll("%%NAMESPACE%%", PropertyContainer.Namespace);
 
 
-
-                InputStream methFile = ClassProcessor.class.getResourceAsStream("resources/MethodTemplate.txt");
+                InputStream methFile = getResource("MethodTemplate.txt");
                 String blankfuncText = FileHelper.getContents(methFile);
 
 
@@ -111,7 +118,7 @@ public class ClassProcessor
      */
     public static void CreateBaseObjectFile(String packagename) throws Exception
     {
-        InputStream file = ClassProcessor.class.getResourceAsStream("resources/BaseObject.txt");
+        InputStream file = getResource("BaseObject.txt");
 
 
         if (file != null) {
@@ -142,7 +149,7 @@ public class ClassProcessor
      */
     public static void CreateLiteralVectorArrayFile(String packagename) throws Exception
     {
-        InputStream file = ClassProcessor.class.getResourceAsStream("resources/LiteralArrayVector.txt");
+        InputStream file = getResource("LiteralArrayVector.txt");
 
 
         if (file != null) {
@@ -170,7 +177,7 @@ public class ClassProcessor
         //split classes into Unknowns and Complextypes
 
         //create complex types
-        InputStream file = ClassProcessor.class.getResourceAsStream("resources/SoapComplexTypeClassTemplate.txt");
+        InputStream file = getResource("SoapComplexTypeClassTemplate.txt");
 
 
         if (file != null)
@@ -184,7 +191,7 @@ public class ClassProcessor
 
                 if (spClass.isArray == true)
                 {
-                    InputStream litFile = ClassProcessor.class.getResourceAsStream("resources/ArrayObjectTemplate.txt");
+                    InputStream litFile = getResource("ArrayObjectTemplate.txt");
 
 
                     if (litFile != null) {
@@ -329,7 +336,7 @@ public class ClassProcessor
         }
 
         //create simple types
-        InputStream simpleTypeTemplateFile = ClassProcessor.class.getResourceAsStream("resources/SoapSimpleTypeClassTemplate.txt");
+        InputStream simpleTypeTemplateFile = getResource("SoapSimpleTypeClassTemplate.txt");
 
 
         if (simpleTypeTemplateFile != null)
@@ -470,7 +477,7 @@ public class ClassProcessor
 
             if (paramClass != null)
             {
-                InputStream file = ClassProcessor.class.getResourceAsStream("resources/ParameterClassTemplate.txt");
+                InputStream file = getResource("ParameterClassTemplate.txt");
                 
                 //set up paramClass
                 if (file != null )
@@ -539,7 +546,7 @@ public class ClassProcessor
             //now do the Return type class
             if (returnClass != null)
             {
-                InputStream file = ClassProcessor.class.getResourceAsStream("resources/ResponseTemplate.txt");
+                InputStream file = getResource("ResponseTemplate.txt");
 
                 //set up paramClass
                 if (file != null )

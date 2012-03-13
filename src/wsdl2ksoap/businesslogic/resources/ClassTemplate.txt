@@ -4,7 +4,7 @@ package %%PACKAGENAME%%;
 
 import org.kxml2.kdom.Element;
 
-public final class %%CLASSNAME%% {
+public class %%CLASSNAME%% {
     public String Address;
     public boolean IsDotNet = true;
 
@@ -17,16 +17,20 @@ public final class %%CLASSNAME%% {
         Marshals = new Marshal[]{ new MarshalBase64() };
     }
 
-    private SoapSerializationEnvelope newEnvelope() {
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+    protected SoapSerializationEnvelope newEnvelope() {
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(getSoapVersion());
         envelope.dotNet = IsDotNet;
         envelope.headerOut = Headers;
         for (Marshal item : Marshals) { item.register(envelope); }
         return envelope;
     }
 
-    private Object Transport(String action, SoapSerializationEnvelope envelope) throws Exception {
-        AndroidHttpTransport transport = new AndroidHttpTransport(Address);
+    protected int getSoapVersion(){
+        return SoapEnvelope.VER11;
+    }
+
+    protected Object transport(String action, SoapSerializationEnvelope envelope) throws Exception {
+        HttpTransportSE transport = new HttpTransportSE(Address);
         transport.debug = Debug;
         try {
             transport.call(action, envelope);
@@ -39,6 +43,16 @@ public final class %%CLASSNAME%% {
             }
         }
         return envelope.bodyIn;
+    }
+    
+
+    public Object call(Object request, SoapObject soapParams, String soapActon,
+                Class<?> responseClass) throws Exception {
+        SoapSerializationEnvelope envelope = newEnvelope();
+        envelope.setOutputSoapObject(soapParams);
+        responseClass.getMethod("register", SoapSerializationEnvelope.class)
+            .invoke(responseClass.newInstance(),envelope);
+        return transport(soapActon, envelope);
     }
 
 %%METHODS%%

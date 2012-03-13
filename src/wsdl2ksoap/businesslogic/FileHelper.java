@@ -5,14 +5,11 @@
 
 package wsdl2ksoap.businesslogic;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -94,4 +91,36 @@ static public void createFolderStructure(String parentPath, String packageName) 
 
         return true;
     }
+    
+    private static String CLASPATH_PREFIX = "classpath:";
+    public static InputStream loadResource(String uri){
+        if(uri == null)
+            return null;
+        uri = uri.trim();
+        
+        if(uri.toLowerCase().startsWith(CLASPATH_PREFIX)){
+            // load from classpath
+            return Thread.currentThread()
+                    .getContextClassLoader().getResourceAsStream(uri.substring(CLASPATH_PREFIX.length()));
+        }else{
+            try {
+                // load from file
+                return new FileInputStream(uri);
+            } catch (FileNotFoundException ex) {}
+        }
+        return null;
+    }
+    
+    public static void main(String [] args){
+        try {
+            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("file:///home/pavle/asoundrc.txt");
+            System.out.println(is);
+            URL url = new URL("classpath:wsdl2ksoap/businesslogic/resources/BaseObject.txt");
+            is = url.openStream();
+            System.out.println(is);
+        } catch (IOException ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
 }

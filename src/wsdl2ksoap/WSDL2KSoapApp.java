@@ -46,7 +46,15 @@ public class WSDL2KSoapApp extends SingleFrameApplication {
         
         if (args.length == 3) {
             try {
-                WSDL2KSoapView.SyncProcessWSDL(args[0], args[1], args[2]);
+                WSDL2KSoapView.SyncProcessWSDL(args[0], args[1], args[2],null);
+            }
+            catch (Exception ex) {
+                System.out.print("Error occured: " + ex.getMessage());
+            }
+            return;
+        }else if(args.length == 4){
+            try {
+                WSDL2KSoapView.SyncProcessWSDL(args[0], args[1], args[2],args[3]);
             }
             catch (Exception ex) {
                 System.out.print("Error occured: " + ex.getMessage());
@@ -54,7 +62,7 @@ public class WSDL2KSoapApp extends SingleFrameApplication {
             return;
         }
         else if (args.length > 0) {
-           System.out.println("Usage: <wsdl file url> <output path> <package name>");
+           System.out.println("Usage: <wsdl file url> <output path> <package name> [<resources base dir>]");
         }
         
         launch(WSDL2KSoapApp.class, args);

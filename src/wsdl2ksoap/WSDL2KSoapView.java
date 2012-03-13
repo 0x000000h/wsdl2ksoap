@@ -288,10 +288,16 @@ public class WSDL2KSoapView extends FrameView {
         return new ProcessWSDLTask(getApplication());
     }
 
-    public static void SyncProcessWSDL(String url, String outputPath, String packageName) {
+    public static void SyncProcessWSDL(String url, String outputPath, String packageName, String resourcesBase) {
         PropertyContainer.reset();
         PropertyContainer.WSDLAddress = url;
-
+        
+        if(resourcesBase != null){
+            ClassProcessor.ResourcesBase = resourcesBase;
+            System.out.println("Resources base: "+ resourcesBase);
+        }
+        
+        
         System.out.print(PropertyContainer.WSDLAddress);
 
         //Set enter values and save settings
@@ -345,7 +351,7 @@ public class WSDL2KSoapView extends FrameView {
 
             SyncProcessWSDL(edtUrl.getText()
                             , edtOutput.getText()
-                            , edtPackage.getText());
+                            , edtPackage.getText(),null);
             
         }
         @Override protected Object doInBackground() {

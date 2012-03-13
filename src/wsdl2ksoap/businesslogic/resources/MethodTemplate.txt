@@ -1,6 +1,7 @@
     public %%OUTPUT%% %%METHODNAME%%(%%INPUT%% params) throws Exception {
-        SoapSerializationEnvelope envelope = newEnvelope();
-        envelope.setOutputSoapObject(params.GetSoapParams());
-        new %%OUTPUT%%().register(envelope);
-        return (%%OUTPUT%%)Transport(params.GetSoapAction(), envelope);
+        if (params == null) {
+            throw new NullPointerException("Request must not be null!");
+        }
+        return (%%OUTPUT%%)call(params, params.GetSoapParams(),
+                        params.GetSoapAction(),%%OUTPUT%%.class);
     }
